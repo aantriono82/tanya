@@ -10,7 +10,7 @@ summary = "Menjawab pertanyaan seputar Islam dengan dalil, tenang, dan mudah dip
   pengelola = "Aan Triono"
   # Isi dengan access key Web3Forms milik Mas Aan (kunci publik formulir, aman tampil di HTML).
   # Selama kosong, formulir menampilkan pemberitahuan "belum aktif" dan tombol kirim nonaktif.
-  web3formsKey = ""
+  web3formsKey = "12a51930-f832-4f2a-b1af-2987ac31e458"
   # Alamat situs blog utama (payung)
   blogUtama = "https://www.aantriono.com/"
 
