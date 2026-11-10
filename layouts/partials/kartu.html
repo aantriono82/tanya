@@ -1,0 +1,6 @@
+<article class="kartu">
+  {{ range .GetTerms "kategori" }}<a class="kat-chip" href="{{ .RelPermalink }}">{{ .LinkTitle }}</a>{{ end }}
+  <h3><a href="{{ .RelPermalink }}">{{ .Title }}</a></h3>
+  <p>{{ with .Params.ringkasan }}{{ . }}{{ else }}{{ .Summary | plainify | truncate 150 }}{{ end }}</p>
+  <p class="meta">Ditanyakan oleh {{ .Params.penanya | default "Hamba Allah" }} · {{ .Date.Format "2 January 2006" }}</p>
+</article>

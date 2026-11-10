@@ -1,0 +1,22 @@
+{{ define "main" }}
+<div class="bungkus">
+  <div class="judul-halaman">
+    <h1>{{ .Title }}</h1>
+    <p>Delapan kategori persoalan keagamaan. Pilih kategori untuk melihat semua tanya jawab di dalamnya.</p>
+  </div>
+  <section class="bagian" style="padding-top:26px">
+    <div class="grid">
+      {{ $semua := where .Site.RegularPages "Section" "tanya-jawab" }}
+      {{ range hugo.Data.kategori }}
+      {{ $slug := .slug }}{{ $n := 0 }}
+      {{ range $semua }}{{ if in (.Params.kategori | default slice) $slug }}{{ $n = add $n 1 }}{{ end }}{{ end }}
+      <div class="kartu kartu-kategori">
+        <h3><a href="/kategori/{{ $slug }}/" style="color:inherit">{{ .nama }}</a></h3>
+        <p>{{ .deskripsi }}</p>
+        <p class="meta"><span class="jumlah">{{ $n }}</span> tanya jawab</p>
+      </div>
+      {{ end }}
+    </div>
+  </section>
+</div>
+{{ end }}

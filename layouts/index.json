@@ -1,0 +1,18 @@
+{{- $daftar := slice -}}
+{{- range where .Site.RegularPages "Section" "tanya-jawab" -}}
+  {{- $kat := "" -}}
+  {{- with .Params.kategori }}{{ $kat = index . 0 }}{{ end -}}
+  {{- $katNama := $kat -}}
+  {{- range .GetTerms "kategori" }}{{ $katNama = .LinkTitle }}{{ end -}}
+  {{- $daftar = $daftar | append (dict
+      "judul" .Title
+      "tautan" .RelPermalink
+      "kategori" $katNama
+      "tags" (.Params.tags | default slice)
+      "ringkasan" (.Params.ringkasan | default "")
+      "isi" (.Plain | truncate 3000)
+      "penanya" (.Params.penanya | default "Hamba Allah")
+      "tanggal" (.Date.Format "2006-01-02")
+  ) -}}
+{{- end -}}
+{{ $daftar | jsonify }}

@@ -1,0 +1,29 @@
+<footer class="situs">
+  <div class="bungkus">
+    <div class="kolom">
+      <div>
+        <h4>{{ .Site.Title }}</h4>
+        <p>{{ .Site.Params.tagline }}</p>
+        <p>Dikelola oleh {{ .Site.Params.pengelola }} — bagian dari <a href="{{ .Site.Params.blogUtama }}">aantriono.com</a>.</p>
+      </div>
+      <div>
+        <h4>Jelajahi</h4>
+        <ul>
+          <li><a href="/kategori/">Semua Kategori</a></li>
+          <li><a href="/tanya-jawab/">Semua Tanya Jawab</a></li>
+          <li><a href="/cari/">Pencarian</a></li>
+          <li><a href="/bertanya/">Ajukan Pertanyaan</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Tentang Situs Ini</h4>
+        <ul>
+          <li><a href="/tentang/">Tentang &amp; Metodologi</a></li>
+          <li><a href="/privasi/">Kebijakan Privasi</a></li>
+          <li><a href="/koreksi/">Laporkan Koreksi</a></li>
+        </ul>
+      </div>
+    </div>
+    <p class="penutup">Jawaban di situs ini bersifat penjelasan dan edukasi berdasar Al-Qur'an dan hadis, bukan fatwa lembaga resmi. Untuk keputusan atas kasus pribadi, berkonsultasilah langsung dengan ustadz, KUA, atau lembaga keagamaan setempat. © {{ now.Year }} {{ .Site.Params.pengelola }}.</p>
+  </div>
+</footer>

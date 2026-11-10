@@ -1,0 +1,50 @@
+{{ define "main" }}
+<div class="bungkus">
+  <div class="halaman">
+    <h1>{{ .Title }}</h1>
+    {{ .Content }}
+
+    {{ if not .Site.Params.web3formsKey }}
+    <div class="peringatan"><strong>Formulir belum aktif.</strong> Kunci akses layanan formulir (Web3Forms) belum dipasang, sehingga pertanyaan belum bisa dikirim. Bagian ini akan aktif sebelum situs dirilis.</div>
+    {{ end }}
+
+    <form class="formulir" data-formulir data-subjek="Pertanyaan baru — Tanya Jawab Islam">
+      <div>
+        <label for="f-nama">Nama samaran *</label>
+        <input type="text" id="f-nama" name="nama_samaran" required maxlength="60" placeholder="Misalnya: Hamba Allah, Ibu Rina, Pak Guru">
+        <p class="petunjuk">Nama inilah yang akan tampil di situs bila jawaban terbit. Jangan memakai nama lengkap.</p>
+      </div>
+      <div>
+        <label for="f-email">Email (opsional)</label>
+        <input type="email" id="f-email" name="email" maxlength="120" placeholder="nama@email.com">
+        <p class="petunjuk">Hanya untuk pemberitahuan saat jawaban Anda terbit. Tidak pernah ditampilkan ke publik.</p>
+      </div>
+      <div>
+        <label for="f-kategori">Kategori *</label>
+        <select id="f-kategori" name="kategori" required>
+          <option value="">— Pilih kategori —</option>
+          {{ range hugo.Data.kategori }}<option value="{{ .nama }}">{{ .nama }}</option>{{ end }}
+        </select>
+      </div>
+      <div>
+        <label for="f-judul">Judul pertanyaan *</label>
+        <input type="text" id="f-judul" name="judul_pertanyaan" required maxlength="150" placeholder="Satu kalimat inti pertanyaan Anda">
+      </div>
+      <div>
+        <label for="f-rincian">Rincian pertanyaan *</label>
+        <textarea id="f-rincian" name="rincian" required maxlength="4000" placeholder="Tuliskan latar persoalannya dengan jelas. Semakin jelas rinciannya, semakin tepat jawabannya."></textarea>
+        <p class="petunjuk">Penting: jangan menulis nomor HP, alamat rumah, atau nama lengkap pihak lain di kolom ini.</p>
+      </div>
+      <label class="cek">
+        <input type="checkbox" id="f-setuju" required>
+        <span>Saya setuju pertanyaan saya disunting dan diterbitkan di situs ini tanpa identitas pribadi saya. *</span>
+      </label>
+      <input type="checkbox" name="botcheck" class="jebakan" tabindex="-1" autocomplete="off" aria-hidden="true">
+      <div>
+        <button class="tombol" type="submit" {{ if not .Site.Params.web3formsKey }}disabled{{ end }}>Kirim Pertanyaan</button>
+      </div>
+      <p class="status-kirim" data-status-kirim aria-live="polite"></p>
+    </form>
+  </div>
+</div>
+{{ end }}

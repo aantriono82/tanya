@@ -1,0 +1,47 @@
+{{ define "main" }}
+<div class="bungkus">
+  <article class="artikel">
+    {{ range .GetTerms "kategori" }}<a class="kat-chip" href="{{ .RelPermalink }}">{{ .LinkTitle }}</a>{{ end }}
+    <h1>{{ .Title }}</h1>
+    <p class="meta-jawaban">Ditanyakan oleh <strong>{{ .Params.penanya | default "Hamba Allah" }}</strong> · Terbit {{ .Date.Format "2 January 2006" }} · Dijawab oleh {{ .Site.Params.pengelola }} · ±{{ .ReadingTime }} menit baca</p>
+
+    {{ if .Params.contoh }}
+    <div class="banner-contoh">⚠ <strong>Halaman contoh untuk pengujian tampilan</strong> — bukan konten rilis. Konten awal resmi disiapkan terpisah dan terbit setelah disetujui pengelola.</div>
+    {{ end }}
+
+    <div class="isi-jawaban">
+      {{ .Content }}
+    </div>
+
+    {{ if .Params.sensitif }}
+    <div class="kotak-rujukan">
+      <strong>Catatan rujukan:</strong> Penjelasan ini bersifat umum. Untuk keputusan atas kasus Anda sendiri, silakan berkonsultasi langsung dengan ustadz, KUA, atau lembaga keagamaan setempat yang mengetahui keadaan Anda secara utuh.
+    </div>
+    {{ end }}
+
+    <div class="aksi-jawaban">
+      <a class="tombol" target="_blank" rel="noopener" href="https://wa.me/?text={{ printf "%s — %s" .Title .Permalink | urlquery }}">Bagikan ke WhatsApp</a>
+      <button class="tombol sekunder" type="button" data-salin="{{ .Permalink }}">Salin Tautan</button>
+      <button class="tombol sekunder" type="button" data-membantu="{{ .Title }}" {{ if not .Site.Params.web3formsKey }}disabled{{ end }}>Jawaban ini membantu</button>
+      <a class="tombol sekunder" href="/koreksi/?judul={{ .Title | urlquery }}&tautan={{ .Permalink | urlquery }}">Laporkan Koreksi</a>
+    </div>
+    <p class="pesan-aksi" data-pesan-aksi aria-live="polite"></p>
+  </article>
+
+  {{ $terkait := slice }}
+  {{ range .GetTerms "kategori" }}
+    {{ range .Pages }}
+      {{ if ne .RelPermalink $.RelPermalink }}{{ $terkait = $terkait | append . }}{{ end }}
+    {{ end }}
+  {{ end }}
+  {{ if $terkait }}
+  <section class="bagian" style="padding-top:6px">
+    <h2>Tanya Terkait</h2>
+    <p class="sub">Pertanyaan lain dalam kategori yang sama.</p>
+    <div class="grid">
+      {{ range first 3 ($terkait | uniq) }}{{ partial "kartu.html" . }}{{ end }}
+    </div>
+  </section>
+  {{ end }}
+</div>
+{{ end }}

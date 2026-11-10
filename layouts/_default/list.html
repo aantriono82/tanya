@@ -1,0 +1,15 @@
+{{ define "main" }}
+<div class="bungkus">
+  <div class="judul-halaman">
+    <h1>{{ .Title }}</h1>
+    {{ with .Description }}<p>{{ . }}</p>{{ end }}
+    {{ with .Content }}<div>{{ . }}</div>{{ end }}
+  </div>
+  <section class="bagian" style="padding-top:26px">
+    <div class="grid">
+      {{ range .Pages }}{{ partial "kartu.html" . }}{{ end }}
+    </div>
+    {{ if not .Pages }}<p>Belum ada tanya jawab di bagian ini.</p>{{ end }}
+  </section>
+</div>
+{{ end }}

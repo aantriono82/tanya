@@ -1,0 +1,12 @@
+<header class="situs">
+  <div class="header-dalam">
+    <a class="logo" href="/">
+      <svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="30" fill="#047857"/><path d="M32 12 L38 26 L52 32 L38 38 L32 52 L26 38 L12 32 L26 26 Z" fill="#FFFBEB"/><circle cx="32" cy="32" r="5" fill="#047857"/></svg>
+      <span><span class="nama">{{ .Site.Title }}</span><span class="slogan-kecil">tanya.aantriono.com</span></span>
+    </a>
+    <nav class="utama">
+      {{ range .Site.Menus.main }}<a href="{{ .URL }}">{{ .Name }}</a>{{ end }}
+      <a class="tombol-bertanya" href="/bertanya/">Bertanya</a>
+    </nav>
+  </div>
+</header>

@@ -1,0 +1,42 @@
+{{ define "main" }}
+<div class="bungkus">
+  <div class="halaman">
+    <h1>{{ .Title }}</h1>
+    {{ .Content }}
+
+    {{ if not .Site.Params.web3formsKey }}
+    <div class="peringatan"><strong>Formulir belum aktif.</strong> Kunci akses layanan formulir (Web3Forms) belum dipasang, sehingga laporan belum bisa dikirim. Bagian ini akan aktif sebelum situs dirilis.</div>
+    {{ end }}
+
+    <form class="formulir" data-formulir data-subjek="Laporan koreksi — Tanya Jawab Islam">
+      <div>
+        <label for="k-judul">Judul jawaban yang dilaporkan *</label>
+        <input type="text" id="k-judul" name="judul_jawaban" required maxlength="200">
+      </div>
+      <div>
+        <label for="k-tautan">Tautan halamannya</label>
+        <input type="text" id="k-tautan" name="tautan" maxlength="300" placeholder="https://tanya.aantriono.com/tanya-jawab/…">
+      </div>
+      <div>
+        <label for="k-isi">Bagian yang dikoreksi dan isi koreksinya *</label>
+        <textarea id="k-isi" name="koreksi" required maxlength="4000" placeholder="Sebutkan bagian yang keliru, bentuk yang benar, dan sumber/rujukannya bila ada."></textarea>
+        <p class="petunjuk">Koreksi yang terbukti benar akan diterapkan dan dicatat secara terbuka di kaki jawaban tersebut.</p>
+      </div>
+      <div>
+        <label for="k-nama">Nama samaran (opsional)</label>
+        <input type="text" id="k-nama" name="nama_samaran" maxlength="60">
+      </div>
+      <div>
+        <label for="k-email">Email (opsional)</label>
+        <input type="email" id="k-email" name="email" maxlength="120">
+        <p class="petunjuk">Diisi bila Anda ingin menerima kabar tindak lanjut koreksinya.</p>
+      </div>
+      <input type="checkbox" name="botcheck" class="jebakan" tabindex="-1" autocomplete="off" aria-hidden="true">
+      <div>
+        <button class="tombol" type="submit" {{ if not .Site.Params.web3formsKey }}disabled{{ end }}>Kirim Laporan Koreksi</button>
+      </div>
+      <p class="status-kirim" data-status-kirim aria-live="polite"></p>
+    </form>
+  </div>
+</div>
+{{ end }}
