@@ -20,7 +20,7 @@ Setiap jawaban di situs ini disusun dengan urutan yang sama:
 
 ## Sumber rujukan
 
-Jawaban-jawaban di situs ini disandarkan pada Al-Qur'an dan hadis, serta pendapat para ulama yang umum menjadi rujukan masyarakat Indonesia, termasuk dalam konteks mazhab Syafi'i yang dianut mayoritas Muslim Indonesia. Kutipan yang sumbernya belum dapat diverifikasi tidak diterbitkan.
+Jawaban-jawaban di situs ini disandarkan pada Al-Qur'an dan hadis, serta pendapat para ulama yang umum menjadi rujukan masyarakat Indonesia, termasuk dalam konteks mazhab Syafi'i yang dianut mayoritas Muslim Indonesia. Untuk sejumlah tema, jawaban juga merujuk Himpunan Putusan Tarjih (HPT) dan Fatwa Majelis Tarjih PP Muhammadiyah — putusan dan fatwa tarjih tersebut disampaikan sebagai salah satu rujukan keilmuan yang hidup di Indonesia, dan dapat ditelusuri melalui hpt.muhammadiyah.or.id. Kutipan yang sumbernya belum dapat diverifikasi tidak diterbitkan.
 
 ## Alur pertanyaan
 
