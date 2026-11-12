@@ -20,7 +20,7 @@ Pertanyaan pembaca masuk lewat formulir, **tidak tampil ke publik**, lalu disele
 | Hosting | Cloudflare Pages — preset Hugo, perintah build `hugo --gc --minify`, direktori keluaran `public`, variabel lingkungan **`HUGO_VERSION=0.169.0`** (Production & Preview; wajib, versi bawaan Pages jauh lebih tua — samakan dengan versi Hugo lokal) |
 | Formulir | [Web3Forms](https://web3forms.com) — kiriman diteruskan ke email pengelola |
 | Pencarian | Statis: Hugo membuat `/index.json` (`layouts/index.json`), dicari di peramban oleh `assets/js/main.js`. Indeks diunduh sekali, ejaan diseragamkan (salat/sholat/shalat, wudu/wudhu, Ramadan/Ramadhan, dst. — daftar `EJAAN`), hasil diurutkan menurut kecocokan (judul > tag > ringkasan > kategori > isi) |
-| SEO | Meta description dari `ringkasan`, Open Graph, schema.org `QAPage`, RSS, `robots.txt` (menunjuk ke sitemap), halaman 404 (`noindex`) |
+| SEO | Meta description dari `ringkasan`, canonical, Open Graph + Twitter Card dengan gambar `static/og-bawaan.png`, schema.org `Article` + `BreadcrumbList` (halaman jawaban) dan `WebSite` + `SearchAction` (beranda), RSS, `robots.txt` (menunjuk ke sitemap), halaman 404 (`noindex`) |
 
 ## Struktur
 
@@ -66,6 +66,7 @@ Front matter:
 | `kategori` | Satu slug dari `data/kategori.yaml`, mis. `["ibadah"]` |
 | `tags` | Kata kunci untuk "Tanya Terkait" dan pencarian. Tidak dibuatkan halaman `/tags/…` sendiri. |
 | `penanya` | Nama samaran penanya (bukan nama asli) |
+| `lastmod` | Opsional. Isi tanggal revisi (mis. `2026-12-01`) bila jawaban diperbaiki sesudah terbit; halaman lalu menampilkan "Diperbarui …" dan `dateModified` ikut berubah. |
 | `ringkasan` | 1–2 kalimat; tampil di kartu, meta description, dan data terstruktur |
 | `sensitif` | `true` untuk menampilkan kotak Catatan Rujukan (anjuran konsultasi langsung) |
 | `populer` | `true` untuk masuk bagian "Paling Sering Dibaca" di beranda |

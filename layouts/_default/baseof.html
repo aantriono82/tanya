@@ -5,36 +5,61 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{{ if .IsHome }}{{ .Site.Title }} — {{ .Site.Params.tagline }}{{ else if eq .Kind "404" }}Halaman tidak ditemukan | {{ .Site.Title }}{{ else }}{{ .Title }} | {{ .Site.Title }}{{ end }}</title>
   {{ if eq .Kind "404" }}<meta name="robots" content="noindex">{{ end }}
-  <meta name="description" content="{{ with .Params.ringkasan }}{{ . }}{{ else }}{{ with .Description }}{{ . }}{{ else }}{{ .Site.Params.description }}{{ end }}{{ end }}">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
   {{ $css := resources.Get "css/main.css" | minify | fingerprint }}
   <link rel="stylesheet" href="{{ $css.RelPermalink }}" integrity="{{ $css.Data.Integrity }}">
-  <meta property="og:title" content="{{ .Title }} | {{ .Site.Title }}">
-  <meta property="og:description" content="{{ with .Params.ringkasan }}{{ . }}{{ else }}{{ .Site.Params.description }}{{ end }}">
-  <meta property="og:type" content="{{ if and (eq .Section "tanya-jawab") .IsPage }}article{{ else }}website{{ end }}">
+  {{ $jawaban := and (eq .Section "tanya-jawab") .IsPage }}
+  {{ $judul := cond .IsHome .Site.Title (printf "%s | %s" .Title .Site.Title) }}
+  {{ $deskripsi := .Site.Params.description }}{{ with .Description }}{{ $deskripsi = . }}{{ end }}{{ with .Params.ringkasan }}{{ $deskripsi = . }}{{ end }}
+  {{ $gambar := "og-bawaan.png" | absURL }}
+  <meta name="description" content="{{ $deskripsi }}">
+  {{ if ne .Kind "404" }}<link rel="canonical" href="{{ .Permalink }}">{{ end }}
+  <link rel="alternate" type="application/rss+xml" title="{{ .Site.Title }}" href="{{ "index.xml" | absURL }}">
+  <meta property="og:site_name" content="{{ .Site.Title }}">
+  <meta property="og:locale" content="id_ID">
+  <meta property="og:title" content="{{ $judul }}">
+  <meta property="og:description" content="{{ $deskripsi }}">
+  <meta property="og:type" content="{{ if $jawaban }}article{{ else }}website{{ end }}">
   <meta property="og:url" content="{{ .Permalink }}">
-  {{ if and (eq .Section "tanya-jawab") .IsPage }}
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "QAPage",
-    "mainEntity": {
-      "@type": "Question",
-      "name": {{ .Title | jsonify }},
-      "text": {{ .Title | jsonify }},
-      "answerCount": 1,
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": {{ with .Params.ringkasan }}{{ . | jsonify }}{{ else }}{{ .Summary | jsonify }}{{ end }},
-        "url": {{ .Permalink | jsonify }},
-        "author": { "@type": "Person", "name": {{ .Site.Params.pengelola | jsonify }} }
-      }
-    }
-  }
-  </script>
+  <meta property="og:image" content="{{ $gambar }}">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="{{ .Site.Title }} — {{ .Site.Params.tagline }}">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{{ $judul }}">
+  <meta name="twitter:description" content="{{ $deskripsi }}">
+  <meta name="twitter:image" content="{{ $gambar }}">
+  {{ if $jawaban }}
+  <meta property="article:published_time" content="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">
+  <meta property="article:modified_time" content="{{ .Lastmod.Format "2006-01-02T15:04:05Z07:00" }}">
+  {{ range .GetTerms "kategori" }}<meta property="article:section" content="{{ .LinkTitle }}">{{ end }}
+  {{ $kat := false }}{{ $seksi := "" }}{{ range first 1 (.GetTerms "kategori") }}{{ $kat = . }}{{ $seksi = .LinkTitle }}{{ end }}
+  {{ $remah := slice (dict "@type" "ListItem" "position" 1 "name" "Beranda" "item" .Site.Home.Permalink) }}
+  {{ with $kat }}{{ $remah = $remah | append (dict "@type" "ListItem" "position" 2 "name" .LinkTitle "item" .Permalink) }}{{ end }}
+  {{ $remah = $remah | append (dict "@type" "ListItem" "position" (add (len $remah) 1) "name" .Title "item" .Permalink) }}
+  {{ $penulis := dict "@type" "Person" "name" .Site.Params.pengelola "url" .Site.Params.blogUtama }}
+  {{ $artikel := dict
+      "@context" "https://schema.org"
+      "@type" "Article"
+      "headline" .Title
+      "description" $deskripsi
+      "image" (slice $gambar)
+      "inLanguage" "id-ID"
+      "datePublished" (.Date.Format "2006-01-02T15:04:05Z07:00")
+      "dateModified" (.Lastmod.Format "2006-01-02T15:04:05Z07:00")
+      "author" $penulis
+      "publisher" (dict "@type" "Organization" "name" .Site.Title "url" .Site.Home.Permalink "logo" (dict "@type" "ImageObject" "url" ("og-bawaan.png" | absURL)))
+      "mainEntityOfPage" (dict "@type" "WebPage" "@id" .Permalink)
+      "articleSection" $seksi
+      "keywords" (delimit (.Params.tags | default slice) ", ")
+  }}
+  <script type="application/ld+json">{{ $artikel | jsonify | safeJS }}</script>
+  <script type="application/ld+json">{{ dict "@context" "https://schema.org" "@type" "BreadcrumbList" "itemListElement" $remah | jsonify | safeJS }}</script>
+  {{ else if .IsHome }}
+  <script type="application/ld+json">{{ dict "@context" "https://schema.org" "@type" "WebSite" "name" .Site.Title "url" .Site.Home.Permalink "inLanguage" "id-ID" "potentialAction" (dict "@type" "SearchAction" "target" (printf "%scari/?q={search_term_string}" .Site.Home.Permalink) "query-input" "required name=search_term_string") | jsonify | safeJS }}</script>
   {{ end }}
 </head>
 <body>

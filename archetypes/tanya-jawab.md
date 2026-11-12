@@ -1,6 +1,7 @@
 ---
 title: "{{ replace .Name "-" " " | title }}"
 date: {{ .Date }}
+# lastmod: 2026-01-31   ← isi hanya saat jawaban direvisi sesudah terbit (mis. setelah laporan koreksi)
 kategori: [""]
 tags: []
 penanya: ""

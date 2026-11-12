@@ -36,6 +36,12 @@ enableRobotsTXT = true
     name = "kategori"
     weight = 60
 
+# Tanggal pembaruan diambil dari kolom `lastmod` di front matter (diisi manual saat
+# merevisi). Sengaja tidak memakai Git: build Cloudflare bisa memakai clone dangkal
+# sehingga semua halaman tampak "diperbarui" setiap deploy.
+[frontmatter]
+  lastmod = ["lastmod", "date"]
+
 [outputs]
   home = ["HTML", "RSS", "JSON"]
 

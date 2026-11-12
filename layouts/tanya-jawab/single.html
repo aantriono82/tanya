@@ -3,7 +3,7 @@
   <article class="artikel">
     {{ range .GetTerms "kategori" }}<a class="kat-chip" href="{{ .RelPermalink }}">{{ .LinkTitle }}</a>{{ end }}
     <h1>{{ .Title }}</h1>
-    <p class="meta-jawaban">Ditanyakan oleh <strong>{{ .Params.penanya | default "Hamba Allah" }}</strong> · Terbit {{ .Date.Format "2 January 2006" }} · Dijawab oleh {{ .Site.Params.pengelola }} · ±{{ .ReadingTime }} menit baca</p>
+    <p class="meta-jawaban">Ditanyakan oleh <strong>{{ .Params.penanya | default "Hamba Allah" }}</strong> · Terbit {{ .Date.Format "2 January 2006" }}{{ if ne (.Lastmod.Format "2006-01-02") (.Date.Format "2006-01-02") }} · Diperbarui {{ .Lastmod.Format "2 January 2006" }}{{ end }} · Dijawab oleh {{ .Site.Params.pengelola }} · ±{{ .ReadingTime }} menit baca</p>
 
     {{ if .Params.contoh }}
     <div class="banner-contoh">⚠ <strong>Halaman contoh untuk pengujian tampilan</strong> — bukan konten rilis. Konten awal resmi disiapkan terpisah dan terbit setelah disetujui pengelola.</div>
