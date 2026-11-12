@@ -20,7 +20,9 @@
 
   // --- Tombol "Jawaban ini membantu" ---
   // Mengirim sinyal evaluasi ke layanan formulir yang sama; angka tidak ditampilkan ke publik.
-  var KUNCI_FORM = window.__KUNCI_FORM__ || "";
+  // Access key Web3Forms (kunci publik) dibaca dari <body data-kunci-form>, bukan dari
+  // script inline, agar CSP tidak perlu mengizinkan script inline buatan situs.
+  var KUNCI_FORM = (document.body.getAttribute("data-kunci-form") || "").trim();
   document.querySelectorAll("[data-membantu]").forEach(function (btn) {
     var judul = btn.getAttribute("data-membantu");
     var sudah = false;

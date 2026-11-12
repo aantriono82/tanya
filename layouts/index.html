@@ -25,7 +25,7 @@
       {{ $slug := .slug }}{{ $n := 0 }}
       {{ range $semua }}{{ if in (.Params.kategori | default slice) $slug }}{{ $n = add $n 1 }}{{ end }}{{ end }}
       <div class="kartu kartu-kategori">
-        <h3><a href="/kategori/{{ $slug }}/" style="color:inherit">{{ .nama }}</a></h3>
+        <h3><a href="/kategori/{{ $slug }}/">{{ .nama }}</a></h3>
         <p>{{ .deskripsi }}</p>
         <p class="meta"><span class="jumlah">{{ $n }}</span> tanya jawab</p>
       </div>
@@ -62,7 +62,7 @@
       <div class="kartu"><div class="no">2</div><h3>Diseleksi &amp; dijawab</h3><p>Pertanyaan diseleksi redaksi, lalu dijawab berdasar Al-Qur'an dan hadis dengan bahasa yang tenang.</p></div>
       <div class="kartu"><div class="no">3</div><h3>Terbit &amp; diberitahu</h3><p>Jawaban terbit setelah ditinjau. Bila Anda meninggalkan email, Anda akan diberitahu tautan jawabannya.</p></div>
     </div>
-    <p style="margin-top:22px"><a class="tombol" href="/bertanya/">Ajukan Pertanyaan</a></p>
+    <p class="ajakan-bawah"><a class="tombol" href="/bertanya/">Ajukan Pertanyaan</a></p>
   </section>
 </div>
 {{ end }}

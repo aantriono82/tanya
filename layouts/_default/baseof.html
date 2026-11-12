@@ -6,9 +6,7 @@
   <title>{{ if .IsHome }}{{ .Site.Title }} — {{ .Site.Params.tagline }}{{ else if eq .Kind "404" }}Halaman tidak ditemukan | {{ .Site.Title }}{{ else }}{{ .Title }} | {{ .Site.Title }}{{ end }}</title>
   {{ if eq .Kind "404" }}<meta name="robots" content="noindex">{{ end }}
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="preload" href="/fonts/plus-jakarta-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
   {{ $css := resources.Get "css/main.css" | minify | fingerprint }}
   <link rel="stylesheet" href="{{ $css.RelPermalink }}" integrity="{{ $css.Data.Integrity }}">
   {{ $jawaban := and (eq .Section "tanya-jawab") .IsPage }}
@@ -62,13 +60,12 @@
   <script type="application/ld+json">{{ dict "@context" "https://schema.org" "@type" "WebSite" "name" .Site.Title "url" .Site.Home.Permalink "inLanguage" "id-ID" "potentialAction" (dict "@type" "SearchAction" "target" (printf "%scari/?q={search_term_string}" .Site.Home.Permalink) "query-input" "required name=search_term_string") | jsonify | safeJS }}</script>
   {{ end }}
 </head>
-<body>
+<body data-kunci-form="{{ .Site.Params.web3formsKey }}">
   {{ partial "header.html" . }}
   <main>
     {{ block "main" . }}{{ end }}
   </main>
   {{ partial "footer.html" . }}
-  <script>window.__KUNCI_FORM__ = {{ .Site.Params.web3formsKey | jsonify }};</script>
   {{ $js := resources.Get "js/main.js" | minify | fingerprint }}
   <script src="{{ $js.RelPermalink }}" integrity="{{ $js.Data.Integrity }}" defer></script>
 </body>

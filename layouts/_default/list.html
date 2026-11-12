@@ -5,7 +5,7 @@
     {{ with .Description }}<p>{{ . }}</p>{{ end }}
     {{ with .Content }}<div>{{ . }}</div>{{ end }}
   </div>
-  <section class="bagian" style="padding-top:26px">
+  <section class="bagian rapat">
     <div class="grid">
       {{ range .Pages }}{{ partial "kartu.html" . }}{{ end }}
     </div>
