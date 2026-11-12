@@ -17,10 +17,10 @@ Pertanyaan pembaca masuk lewat formulir, **tidak tampil ke publik**, lalu disele
 | Bagian | Keterangan |
 |---|---|
 | Generator | Hugo (extended), tanpa tema eksternal dan tanpa npm |
-| Hosting | Cloudflare Pages — preset Hugo, perintah build `hugo --gc --minify`, direktori keluaran `public` |
+| Hosting | Cloudflare Pages — preset Hugo, perintah build `hugo --gc --minify`, direktori keluaran `public`, variabel lingkungan **`HUGO_VERSION=0.169.0`** (Production & Preview; wajib, versi bawaan Pages jauh lebih tua — samakan dengan versi Hugo lokal) |
 | Formulir | [Web3Forms](https://web3forms.com) — kiriman diteruskan ke email pengelola |
-| Pencarian | Statis: Hugo membuat `/index.json` (`layouts/index.json`), dicari di peramban oleh `assets/js/main.js` |
-| SEO | Meta description dari `ringkasan`, Open Graph, schema.org `QAPage`, RSS |
+| Pencarian | Statis: Hugo membuat `/index.json` (`layouts/index.json`), dicari di peramban oleh `assets/js/main.js`. Indeks diunduh sekali, ejaan diseragamkan (salat/sholat/shalat, wudu/wudhu, Ramadan/Ramadhan, dst. — daftar `EJAAN`), hasil diurutkan menurut kecocokan (judul > tag > ringkasan > kategori > isi) |
+| SEO | Meta description dari `ringkasan`, Open Graph, schema.org `QAPage`, RSS, `robots.txt` (menunjuk ke sitemap), halaman 404 (`noindex`) |
 
 ## Struktur
 
@@ -64,7 +64,7 @@ Front matter:
 | Kolom | Isi |
 |---|---|
 | `kategori` | Satu slug dari `data/kategori.yaml`, mis. `["ibadah"]` |
-| `tags` | Kata kunci; juga dipakai untuk menentukan "Tanya Terkait" |
+| `tags` | Kata kunci untuk "Tanya Terkait" dan pencarian. Tidak dibuatkan halaman `/tags/…` sendiri. |
 | `penanya` | Nama samaran penanya (bukan nama asli) |
 | `ringkasan` | 1–2 kalimat; tampil di kartu, meta description, dan data terstruktur |
 | `sensitif` | `true` untuk menampilkan kotak Catatan Rujukan (anjuran konsultasi langsung) |

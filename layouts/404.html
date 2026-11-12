@@ -1,0 +1,13 @@
+{{ define "main" }}
+<div class="bungkus">
+  <div class="halaman">
+    <h1>Halaman tidak ditemukan</h1>
+    <p>Maaf, halaman yang Anda cari tidak ada atau sudah dipindahkan. Coba cari pertanyaan Anda di bawah ini.</p>
+    <form class="pencarian-halaman" action="/cari/" method="get" role="search">
+      <input type="search" name="q" placeholder="Cari pertanyaan…" aria-label="Cari pertanyaan">
+      <button type="submit">Cari</button>
+    </form>
+    <p>Atau jelajahi <a href="/kategori/">semua kategori</a>, lihat <a href="/tanya-jawab/">semua tanya jawab</a>, atau <a href="/bertanya/">ajukan pertanyaan baru</a>.</p>
+  </div>
+</div>
+{{ end }}

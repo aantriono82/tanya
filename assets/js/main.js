@@ -84,15 +84,72 @@
   if (kt && param.get("tautan")) kt.value = param.get("tautan");
 
   // --- Pencarian statis ---
+  // Penyeragam ejaan: pembaca menulis istilah yang sama dengan banyak cara
+  // (salat/sholat/shalat, wudu/wudhu, Ramadan/Ramadhan, …). Teks indeks dan kata
+  // kunci sama-sama diubah ke satu bentuk baku sebelum dicocokkan.
+  var EJAAN = {
+    salat: "shalat", sholat: "shalat", solat: "shalat",
+    wudu: "wudhu", wudlu: "wudhu",
+    ramadhan: "ramadan", romadhon: "ramadan", ramadlan: "ramadan",
+    alquran: "quran", quraan: "quran", kuran: "quran",
+    hadits: "hadis", hadist: "hadis", hadith: "hadis",
+    fitri: "fitrah",
+    dzikir: "zikir", dhikr: "zikir",
+    shubuh: "subuh",
+    dzuhur: "zuhur", dhuhur: "zuhur", duhur: "zuhur", lohor: "zuhur",
+    ashar: "asar", magrib: "maghrib", isyak: "isya",
+    taraweh: "tarawih",
+    shaum: "puasa", saum: "puasa", shiyam: "puasa",
+    shadaqah: "sedekah", sadaqah: "sedekah", sodaqoh: "sedekah",
+    tobat: "taubat",
+    kadha: "qadha", qodho: "qadha",
+    fidiah: "fidyah",
+    akikah: "aqiqah", aqiqoh: "aqiqah", akika: "aqiqah",
+    jenasah: "jenazah", janazah: "jenazah",
+    tayammum: "tayamum", tadabur: "tadabbur", tadaburi: "tadabburi",
+    syawwal: "syawal",
+    gibah: "ghibah", ghibbah: "ghibah",
+    mahrom: "mahram",
+    nafaqah: "nafkah",
+    akhlaq: "akhlak", aqidah: "akidah"
+  };
+  function seragamkan(teks) {
+    return (teks || "")
+      .toLowerCase()
+      .normalize("NFD").replace(/[̀-ͯ]/g, "")   // buang tanda diakritik (ā, ḥ, …)
+      .replace(/['’ʼ‘`]/g, "")                            // qur'an → quran, do'a → doa
+      .replace(/\bal[\s-]+quran\b/g, "quran")              // al-quran / al quran → quran
+      .split(/[^a-z0-9؀-ۿ]+/)
+      .filter(Boolean)
+      .map(function (k) { return EJAAN.hasOwnProperty(k) ? EJAAN[k] : k; })
+      .join(" ");
+  }
+
   var formCari = document.getElementById("form-cari");
   if (formCari) {
     var input = document.getElementById("kata-kunci");
     var wadah = document.getElementById("hasil-cari");
     var ringkasan = document.getElementById("ringkasan-cari");
-    var indeks = null;
+    var janjiIndeks = null;   // indeks diunduh dan disiapkan sekali saja
+    var jeda = null;
 
     function muatIndeks() {
-      return fetch("/index.json").then(function (r) { return r.json(); }).then(function (d) { indeks = d; return d; });
+      if (!janjiIndeks) {
+        janjiIndeks = fetch("/index.json")
+          .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
+          .then(function (d) {
+            return d.map(function (item) {
+              item._judul = seragamkan(item.judul);
+              item._tags = seragamkan((item.tags || []).join(" "));
+              item._ringkasan = seragamkan(item.ringkasan);
+              item._kategori = seragamkan(item.kategori);
+              item._isi = seragamkan(item.isi);
+              return item;
+            });
+          })
+          .catch(function (e) { janjiIndeks = null; throw e; });  // izinkan coba lagi
+      }
+      return janjiIndeks;
     }
     function tampilkan(daftar, kata) {
       wadah.innerHTML = "";
@@ -102,29 +159,68 @@
       daftar.forEach(function (item) {
         var el = document.createElement("article");
         el.className = "kartu";
-        var chip = item.kategori ? '<span class="kat-chip">' + item.kategori.replace(/-/g, " ") + "</span>" : "";
-        el.innerHTML = chip + '<h3><a href="' + item.tautan + '"></a></h3><p></p>';
-        el.querySelector("a").textContent = item.judul;
-        el.querySelector("p").textContent = item.ringkasan || "";
+        if (item.kategori) {
+          var chip = document.createElement("span");
+          chip.className = "kat-chip";
+          chip.textContent = item.kategori;
+          el.appendChild(chip);
+        }
+        var h3 = document.createElement("h3");
+        var a = document.createElement("a");
+        a.href = item.tautan;
+        a.textContent = item.judul;
+        h3.appendChild(a);
+        var p = document.createElement("p");
+        p.textContent = item.ringkasan || "";
+        el.appendChild(h3);
+        el.appendChild(p);
         wadah.appendChild(el);
       });
     }
+    // Skor: kecocokan di judul paling berbobot, lalu tag, ringkasan, kategori, isi.
+    function skor(item, kataKunci) {
+      var total = 0;
+      for (var i = 0; i < kataKunci.length; i++) {
+        var k = kataKunci[i], s = 0;
+        if (item._judul.indexOf(k) >= 0) s += 10;
+        if (item._tags.indexOf(k) >= 0) s += 6;
+        if (item._ringkasan.indexOf(k) >= 0) s += 3;
+        if (item._kategori.indexOf(k) >= 0) s += 2;
+        if (item._isi.indexOf(k) >= 0) s += 1;
+        if (!s) return 0;   // setiap kata kunci wajib ditemukan
+        total += s;
+      }
+      return total;
+    }
     function cari(kata) {
-      kata = (kata || "").trim().toLowerCase();
-      if (!kata) { wadah.innerHTML = ""; ringkasan.textContent = ""; return; }
+      var asli = (kata || "").trim();
+      var kataKunci = seragamkan(asli).split(" ").filter(Boolean);
+      if (!kataKunci.length) { wadah.innerHTML = ""; ringkasan.textContent = ""; return; }
       muatIndeks().then(function (d) {
-        var kataKunci = kata.split(/\s+/);
-        var hasil = d.filter(function (item) {
-          var teks = (item.judul + " " + item.kategori + " " + (item.tags || []).join(" ") + " " + item.ringkasan + " " + item.isi).toLowerCase();
-          return kataKunci.every(function (k) { return teks.indexOf(k) >= 0; });
-        });
-        tampilkan(hasil, kata);
+        if (input.value.trim() !== asli) return;   // abaikan hasil kedaluwarsa
+        var hasil = d
+          .map(function (item) { return { item: item, skor: skor(item, kataKunci) }; })
+          .filter(function (h) { return h.skor > 0; })
+          .sort(function (a, b) {
+            return b.skor - a.skor || (b.item.tanggal > a.item.tanggal ? 1 : b.item.tanggal < a.item.tanggal ? -1 : 0);
+          })
+          .map(function (h) { return h.item; });
+        tampilkan(hasil, asli);
+        try { history.replaceState(null, "", "?q=" + encodeURIComponent(asli)); } catch (e) {}
       }).catch(function () {
         ringkasan.textContent = "Indeks pencarian gagal dimuat. Silakan muat ulang halaman ini.";
       });
     }
-    formCari.addEventListener("submit", function (ev) { ev.preventDefault(); cari(input.value); });
-    input.addEventListener("input", function () { cari(input.value); });
+    formCari.addEventListener("submit", function (ev) {
+      ev.preventDefault();
+      clearTimeout(jeda);
+      cari(input.value);
+    });
+    input.addEventListener("input", function () {
+      clearTimeout(jeda);
+      jeda = setTimeout(function () { cari(input.value); }, 200);
+    });
+    input.addEventListener("focus", function () { muatIndeks().catch(function () {}); }, { once: true });
     var awal = param.get("q");
     if (awal) { input.value = awal; cari(awal); }
   }

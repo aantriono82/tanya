@@ -3,6 +3,7 @@ locale = "id-ID"
 defaultContentLanguage = "id"
 title = "Tanya Jawab Islam"
 summary = "Menjawab pertanyaan seputar Islam dengan dalil, tenang, dan mudah dipahami."
+enableRobotsTXT = true
 
 [params]
   tagline = "Menjawab pertanyaan seputar Islam dengan dalil, tenang, dan mudah dipahami."
@@ -17,9 +18,11 @@ summary = "Menjawab pertanyaan seputar Islam dengan dalil, tenang, dan mudah dip
   # Alamat situs blog utama (payung)
   blogUtama = "https://www.aantriono.com/"
 
+# Hanya kategori yang punya halaman sendiri. `tags` tetap ditulis di front matter dan
+# dipakai untuk "Tanya Terkait" serta indeks pencarian, tetapi tidak dibuatkan halaman
+# /tags/… (halaman tipis berisi 1–2 jawaban, tidak ditautkan dari mana pun).
 [taxonomies]
   kategori = "kategori"
-  tag = "tags"
 
 # Penentu "Tanya Terkait": jawaban dengan tag/kategori paling mirip didahulukan.
 [related]
