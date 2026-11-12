@@ -11,12 +11,27 @@ summary = "Menjawab pertanyaan seputar Islam dengan dalil, tenang, dan mudah dip
   # Isi dengan access key Web3Forms milik Mas Aan (kunci publik formulir, aman tampil di HTML).
   # Selama kosong, formulir menampilkan pemberitahuan "belum aktif" dan tombol kirim nonaktif.
   web3formsKey = "12a51930-f832-4f2a-b1af-2987ac31e458"
+  # Tombol "Jawaban ini membantu" mengirim satu email Web3Forms per klik dan memakai
+  # kuota yang sama dengan formulir Bertanya/Koreksi. Ubah ke true untuk menampilkannya.
+  tombolMembantu = false
   # Alamat situs blog utama (payung)
   blogUtama = "https://www.aantriono.com/"
 
 [taxonomies]
   kategori = "kategori"
   tag = "tags"
+
+# Penentu "Tanya Terkait": jawaban dengan tag/kategori paling mirip didahulukan.
+[related]
+  includeNewer = true
+  threshold = 1
+  toLower = true
+  [[related.indices]]
+    name = "tags"
+    weight = 100
+  [[related.indices]]
+    name = "kategori"
+    weight = 60
 
 [outputs]
   home = ["HTML", "RSS", "JSON"]

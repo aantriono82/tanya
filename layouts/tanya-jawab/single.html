@@ -22,24 +22,31 @@
     <div class="aksi-jawaban">
       <a class="tombol" target="_blank" rel="noopener" href="https://wa.me/?text={{ printf "%s — %s" .Title .Permalink | urlquery }}">Bagikan ke WhatsApp</a>
       <button class="tombol sekunder" type="button" data-salin="{{ .Permalink }}">Salin Tautan</button>
-      <button class="tombol sekunder" type="button" data-membantu="{{ .Title }}" {{ if not .Site.Params.web3formsKey }}disabled{{ end }}>Jawaban ini membantu</button>
+      {{ if and .Site.Params.tombolMembantu .Site.Params.web3formsKey }}
+      <button class="tombol sekunder" type="button" data-membantu="{{ .Title }}">Jawaban ini membantu</button>
+      {{ end }}
       <a class="tombol sekunder" href="/koreksi/?judul={{ .Title | urlquery }}&tautan={{ .Permalink | urlquery }}">Laporkan Koreksi</a>
     </div>
     <p class="pesan-aksi" data-pesan-aksi aria-live="polite"></p>
   </article>
 
-  {{ $terkait := slice }}
-  {{ range .GetTerms "kategori" }}
-    {{ range .Pages }}
-      {{ if ne .RelPermalink $.RelPermalink }}{{ $terkait = $terkait | append . }}{{ end }}
+  {{/* Utamakan jawaban paling mirip (tag & kategori, lihat [related] di hugo.toml);
+       bila kurang dari 3, lengkapi dengan jawaban terbaru dari kategori yang sama. */}}
+  {{ $terkait := where (.Site.RegularPages.Related .) "Section" "tanya-jawab" }}
+  {{ if lt (len $terkait) 3 }}
+    {{ range .GetTerms "kategori" }}
+      {{ range .Pages.ByDate.Reverse }}
+        {{ if ne .RelPermalink $.RelPermalink }}{{ $terkait = $terkait | append . }}{{ end }}
+      {{ end }}
     {{ end }}
   {{ end }}
+  {{ $terkait = $terkait | uniq }}
   {{ if $terkait }}
   <section class="bagian" style="padding-top:6px">
     <h2>Tanya Terkait</h2>
-    <p class="sub">Pertanyaan lain dalam kategori yang sama.</p>
+    <p class="sub">Pertanyaan lain dengan topik serupa.</p>
     <div class="grid">
-      {{ range first 3 ($terkait | uniq) }}{{ partial "kartu.html" . }}{{ end }}
+      {{ range first 3 $terkait }}{{ partial "kartu.html" . }}{{ end }}
     </div>
   </section>
   {{ end }}
